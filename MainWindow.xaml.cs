@@ -38,7 +38,7 @@ namespace Chess
 
         private void DrawBoard()
         {
-            //ClearChildren(GridBoard, "Squares");
+            ClearChildren(GridBoard, "Squares");
             DrawSquares();
         }
 
@@ -100,42 +100,10 @@ namespace Chess
                 if (i % 8 == 0)
                     even = !even;
                 if (IsEven(i) == even)
-                    PaintSquare(i, brushBlack);
+                    DrawSquare(i, brushBlack);
                 else
-                    PaintSquare(i, brushWhite);
+                    DrawSquare(i, brushWhite);
             }
-        }
-
-        private void PaintSquare(int pos, SolidColorBrush brush)
-        {
-            string name = "r" + pos.ToString();
-            Rectangle r = (Rectangle)FindDescendant(GridBoard, name);
-            if (r == null)
-                MessageBox.Show(name);
-            else
-                r.Fill = brush;
-        }
-
-        // Find a descendant control by name.
-        private static DependencyObject FindDescendant(
-            DependencyObject parent, string name)
-        {
-            // See if this object has the target name.
-            FrameworkElement element = parent as FrameworkElement;
-            if ((element != null) && (element.Name == name)) return parent;
-
-            // Recursively check the children.
-            int num_children = VisualTreeHelper.GetChildrenCount(parent);
-            for (int i = 0; i < num_children; i++)
-            {
-                // See if this child has the target name.
-                DependencyObject child = VisualTreeHelper.GetChild(parent, i);
-                DependencyObject descendant = FindDescendant(child, name);
-                if (descendant != null) return descendant;
-            }
-
-            // We didn't find a descendant with the target name.
-            return null;
         }
 
         private void DrawSquare(int i, SolidColorBrush brush)
