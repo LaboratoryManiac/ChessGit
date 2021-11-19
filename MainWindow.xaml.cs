@@ -38,8 +38,7 @@ namespace Chess
 
         private void DrawBoard()
         {
-            //ClearChildren(GridBoard, "Squares");
-            DrawSquares();
+            PaintSquares();
         }
 
         private void LoadBoardState(Board board)
@@ -55,21 +54,10 @@ namespace Chess
             {
                 switch (type)
                 {
-                    case "Squares":
-                        ClearSquares(grid, intCounter);
-                        break;
                     case "Pieces":
                         ClearPieces(grid, intCounter);
                         break;
                 }
-            }
-        }
-        private void ClearSquares(Grid grid, int intCounter)
-        {
-            if (grid.Children[intCounter].GetType() == typeof(Rectangle))
-            {
-                Rectangle ucCurrentChild = (Rectangle)grid.Children[intCounter];
-                grid.Children.Remove(ucCurrentChild);
             }
         }
         private void ClearPieces(Grid grid, int intCounter)
@@ -92,7 +80,7 @@ namespace Chess
             }
         }
 
-        private void DrawSquares()
+        private void PaintSquares()
         {
             bool even = true;
             for (int i = 0; i < 64; i++)
@@ -136,18 +124,6 @@ namespace Chess
 
             // We didn't find a descendant with the target name.
             return null;
-        }
-
-        private void DrawSquare(int i, SolidColorBrush brush)
-        {
-            Rectangle r = new Rectangle()
-            {
-                Stretch = Stretch.Fill,
-                Fill = brush
-            };
-            GridBoard.Children.Add(r);
-            Grid.SetColumn(r, i % 8);
-            Grid.SetRow(r, i / 8);
         }
 
         private void DrawPieceImage(int i, string colour, string piece)
