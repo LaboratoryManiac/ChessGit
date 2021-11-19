@@ -1,0 +1,115 @@
+﻿<Window x:Class="Chess.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Chess"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="960" Width="960">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="300*"/>
+            <ColumnDefinition Width="80*"/>
+            <ColumnDefinition Width="50*"/>
+            <ColumnDefinition Width="300*"/>
+            <ColumnDefinition Width="10*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="500*"/>
+            <RowDefinition Height="10*"/>
+        </Grid.RowDefinitions>
+        <TextBox x:Name="TextboxFen" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1"/>
+        <Button x:Name="ButtonFen" Grid.Column="3" Grid.Row="1" Click="ButtonFen_Click" Content="Load FEN"/>
+        <Viewbox Stretch="Uniform" Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="2" Grid.RowSpan="1">
+        <Grid x:Name="GridBoard" Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="2" Grid.RowSpan="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <Rectangle x:Name="r0" Grid.Column="0" Grid.Row="0" Stretch="Fill" Fill="Black"/>
+            <Rectangle x:Name="r1" Grid.Column="1" Grid.Row="0" Stretch="Fill" Fill="Black"/>
+            <Rectangle x:Name="r2" Grid.Column="2" Grid.Row="0" Stretch="Fill" Fill="Black"/>
+            <Rectangle x:Name="r3" Grid.Column="3" Grid.Row="0" Stretch="Fill" Fill="Black"/>
+            <Rectangle x:Name="r4" Grid.Column="4" Grid.Row="0" Stretch="Fill" Fill="Black"/>
+            <Rectangle x:Name="r5" Grid.Column="5" Grid.Row="0" Stretch="Fill" Fill="Black"/>
+            <Rectangle x:Name="r6" Grid.Column="6" Grid.Row="0" Stretch="Fill" Fill="Black"/>
+            <Rectangle x:Name="r7" Grid.Column="7" Grid.Row="0" Stretch="Fill" Fill="Black"/>
+            <Rectangle x:Name="r8" Grid.Column="0" Grid.Row="1" Stretch="Fill"/>
+            <Rectangle x:Name="r9" Grid.Column="1" Grid.Row="1" Stretch="Fill"/>
+            <Rectangle x:Name="r10" Grid.Column="2" Grid.Row="1" Stretch="Fill"/>
+            <Rectangle x:Name="r11" Grid.Column="3" Grid.Row="1" Stretch="Fill"/>
+            <Rectangle x:Name="r12" Grid.Column="4" Grid.Row="1" Stretch="Fill"/>
+            <Rectangle x:Name="r13" Grid.Column="5" Grid.Row="1" Stretch="Fill"/>
+            <Rectangle x:Name="r14" Grid.Column="6" Grid.Row="1" Stretch="Fill"/>
+            <Rectangle x:Name="r15" Grid.Column="7" Grid.Row="1" Stretch="Fill"/>
+            <Rectangle x:Name="r16" Grid.Column="0" Grid.Row="2" Stretch="Fill"/>
+            <Rectangle x:Name="r17" Grid.Column="1" Grid.Row="2" Stretch="Fill"/>
+            <Rectangle x:Name="r18" Grid.Column="2" Grid.Row="2" Stretch="Fill"/>
+            <Rectangle x:Name="r19" Grid.Column="3" Grid.Row="2" Stretch="Fill"/>
+            <Rectangle x:Name="r20" Grid.Column="4" Grid.Row="2" Stretch="Fill"/>
+            <Rectangle x:Name="r21" Grid.Column="5" Grid.Row="2" Stretch="Fill"/>
+            <Rectangle x:Name="r22" Grid.Column="6" Grid.Row="2" Stretch="Fill"/>
+            <Rectangle x:Name="r23" Grid.Column="7" Grid.Row="2" Stretch="Fill"/>
+            <Rectangle x:Name="r24" Grid.Column="0" Grid.Row="3" Stretch="Fill"/>
+            <Rectangle x:Name="r25" Grid.Column="1" Grid.Row="3" Stretch="Fill"/>
+            <Rectangle x:Name="r26" Grid.Column="2" Grid.Row="3" Stretch="Fill"/>
+            <Rectangle x:Name="r27" Grid.Column="3" Grid.Row="3" Stretch="Fill"/>
+            <Rectangle x:Name="r28" Grid.Column="4" Grid.Row="3" Stretch="Fill"/>
+            <Rectangle x:Name="r29" Grid.Column="5" Grid.Row="3" Stretch="Fill"/>
+            <Rectangle x:Name="r30" Grid.Column="6" Grid.Row="3" Stretch="Fill"/>
+            <Rectangle x:Name="r31" Grid.Column="7" Grid.Row="3" Stretch="Fill"/>
+            <Rectangle x:Name="r32" Grid.Column="0" Grid.Row="4" Stretch="Fill"/>
+            <Rectangle x:Name="r33" Grid.Column="1" Grid.Row="4" Stretch="Fill"/>
+            <Rectangle x:Name="r34" Grid.Column="2" Grid.Row="4" Stretch="Fill"/>
+            <Rectangle x:Name="r35" Grid.Column="3" Grid.Row="4" Stretch="Fill"/>
+            <Rectangle x:Name="r36" Grid.Column="4" Grid.Row="4" Stretch="Fill"/>
+            <Rectangle x:Name="r37" Grid.Column="5" Grid.Row="4" Stretch="Fill"/>
+            <Rectangle x:Name="r38" Grid.Column="6" Grid.Row="4" Stretch="Fill"/>
+            <Rectangle x:Name="r39" Grid.Column="7" Grid.Row="4" Stretch="Fill"/>
+            <Rectangle x:Name="r40" Grid.Column="0" Grid.Row="5" Stretch="Fill"/>
+            <Rectangle x:Name="r41" Grid.Column="1" Grid.Row="5" Stretch="Fill"/>
+            <Rectangle x:Name="r42" Grid.Column="2" Grid.Row="5" Stretch="Fill"/>
+            <Rectangle x:Name="r43" Grid.Column="3" Grid.Row="5" Stretch="Fill"/>
+            <Rectangle x:Name="r44" Grid.Column="4" Grid.Row="5" Stretch="Fill"/>
+            <Rectangle x:Name="r45" Grid.Column="5" Grid.Row="5" Stretch="Fill"/>
+            <Rectangle x:Name="r46" Grid.Column="6" Grid.Row="5" Stretch="Fill"/>
+            <Rectangle x:Name="r47" Grid.Column="7" Grid.Row="5" Stretch="Fill"/>
+            <Rectangle x:Name="r48" Grid.Column="0" Grid.Row="6" Stretch="Fill"/>
+            <Rectangle x:Name="r49" Grid.Column="1" Grid.Row="6" Stretch="Fill"/>
+            <Rectangle x:Name="r50" Grid.Column="2" Grid.Row="6" Stretch="Fill"/>
+            <Rectangle x:Name="r51" Grid.Column="3" Grid.Row="6" Stretch="Fill"/>
+            <Rectangle x:Name="r52" Grid.Column="4" Grid.Row="6" Stretch="Fill"/>
+            <Rectangle x:Name="r53" Grid.Column="5" Grid.Row="6" Stretch="Fill"/>
+            <Rectangle x:Name="r54" Grid.Column="6" Grid.Row="6" Stretch="Fill"/>
+            <Rectangle x:Name="r55" Grid.Column="7" Grid.Row="6" Stretch="Fill"/>
+            <Rectangle x:Name="r56" Grid.Column="0" Grid.Row="7" Stretch="Fill"/>
+            <Rectangle x:Name="r57" Grid.Column="1" Grid.Row="7" Stretch="Fill"/>
+            <Rectangle x:Name="r58" Grid.Column="2" Grid.Row="7" Stretch="Fill"/>
+            <Rectangle x:Name="r59" Grid.Column="3" Grid.Row="7" Stretch="Fill"/>
+            <Rectangle x:Name="r60" Grid.Column="4" Grid.Row="7" Stretch="Fill"/>
+            <Rectangle x:Name="r61" Grid.Column="5" Grid.Row="7" Stretch="Fill"/>
+            <Rectangle x:Name="r62" Grid.Column="6" Grid.Row="7" Stretch="Fill"/>
+            <Rectangle x:Name="r63" Grid.Column="7" Grid.Row="7" Stretch="Fill"/>
+        </Grid>
+        </Viewbox>
+    </Grid>
+</Window>
