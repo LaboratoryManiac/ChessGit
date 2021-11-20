@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using static Chess.Board;
 using static Chess.CharFunc;
+using static Chess.DoubleFunc;
 using static Chess.IntFunc;
 
 namespace Chess
@@ -40,9 +41,12 @@ namespace Chess
 
         Image ImageDragTemp;
         ImageSource SourceDragTemp;
-        //mult * distance = offset of drag-and-drop image - by default it may not be in the right place relative to cursor to look good
-        double DRAG_OFFSET_X_MULT = -0.125;
-        double DRAG_OFFSET_Y_MULT = -0.125;
+        //if mults are used for non-square images probably use an X and Y mult
+
+        //mult * size = offset of drag-and-drop image - by default it may not be in the right place relative to cursor to look good
+        double DRAG_OFFSET_MULT = -0.027;
+        //mult * size = size change of drag-and-drop image
+        double DRAG_SIZE_MULT = -0.889;
         public MainWindow()
         {
             SourceBlank = conv.ConvertFromString("data/Blank.png") as ImageSource;
@@ -188,8 +192,8 @@ namespace Chess
             if (ImageDrag.IsMouseCaptured)
             {
                 Point msPos = e.GetPosition(CanvasDrag);
-                msPos.X += DRAG_OFFSET_X_MULT * Width;
-                msPos.Y += DRAG_OFFSET_Y_MULT * Width;
+                msPos.X += DRAG_OFFSET_MULT * GridBoard.ActualWidth;
+                msPos.Y += DRAG_OFFSET_MULT * GridBoard.ActualHeight;
                 ImageDrag.RenderTransform = new TranslateTransform(msPos.X, msPos.Y);
             }
         }
@@ -202,21 +206,29 @@ namespace Chess
                 ImageDrag.Visibility = Visibility.Collapsed;
                 ImageDrag.ReleaseMouseCapture();
 
-                UIElement parent = VisualTreeHelper.GetParent((UIElement)e.MouseDevice.DirectlyOver) as UIElement;
-                if (parent == GridBoard)
+                try //if not in try catch dropping piece out of window will cause crash when it should just reset piece
                 {
-                    if (true)//TODO move is in legalmove list
+                    UIElement parent = VisualTreeHelper.GetParent((UIElement)e.MouseDevice.DirectlyOver) as UIElement;
+
+                    if (parent == GridBoard)
                     {
-                        Image newImage = (Image)e.MouseDevice.DirectlyOver;
-                        int[] pos = MouseGridPos(newImage);
-                        newImage.Source = SourceDragTemp;
+                        if (true)//TODO move is in legalmove list
+                        {
+                            Image newImage = (Image)e.MouseDevice.DirectlyOver;
+                            int[] pos = MouseGridPos(newImage);
+                            newImage.Source = SourceDragTemp;
+                        }
+                        else
+                        {
+                            ResetDragged(ImageDragTemp, SourceDragTemp); //illegal move, reset
+                        }
                     }
                     else
                     {
-                        ResetDragged(ImageDragTemp, SourceDragTemp); //illegal move, reset
+                        ResetDragged(ImageDragTemp, SourceDragTemp); //not on board, reset
                     }
                 }
-                else
+                catch
                 {
                     ResetDragged(ImageDragTemp, SourceDragTemp); //not on board, reset
                 }
@@ -240,8 +252,9 @@ namespace Chess
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            ImageDrag.MaxHeight = r0.ActualHeight;
-            ImageDrag.MaxWidth = r0.ActualWidth;
+            double d = GetLower(this.ActualHeight, this.ActualWidth);
+            ImageDrag.MaxHeight = d + DRAG_SIZE_MULT * d;
+            ImageDrag.MaxWidth = d + DRAG_SIZE_MULT * d;
         }
     }
 }
