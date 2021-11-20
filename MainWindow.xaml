@@ -41,146 +41,16 @@
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="1*"/>
-            </Grid.RowDefinitions>
-            
-            <Rectangle x:Name="r0" Grid.Column="0" Grid.Row="0" Stretch="Fill"/>
-            <Rectangle x:Name="r1" Grid.Column="1" Grid.Row="0" Stretch="Fill"/>
-            <Rectangle x:Name="r2" Grid.Column="2" Grid.Row="0" Stretch="Fill"/>
-            <Rectangle x:Name="r3" Grid.Column="3" Grid.Row="0" Stretch="Fill"/>
-            <Rectangle x:Name="r4" Grid.Column="4" Grid.Row="0" Stretch="Fill"/>
-            <Rectangle x:Name="r5" Grid.Column="5" Grid.Row="0" Stretch="Fill"/>
-            <Rectangle x:Name="r6" Grid.Column="6" Grid.Row="0" Stretch="Fill"/>
-            <Rectangle x:Name="r7" Grid.Column="7" Grid.Row="0" Stretch="Fill"/>
-            <Rectangle x:Name="r8" Grid.Column="0" Grid.Row="1" Stretch="Fill"/>
-            <Rectangle x:Name="r9" Grid.Column="1" Grid.Row="1" Stretch="Fill"/>
-            <Rectangle x:Name="r10" Grid.Column="2" Grid.Row="1" Stretch="Fill"/>
-            <Rectangle x:Name="r11" Grid.Column="3" Grid.Row="1" Stretch="Fill"/>
-            <Rectangle x:Name="r12" Grid.Column="4" Grid.Row="1" Stretch="Fill"/>
-            <Rectangle x:Name="r13" Grid.Column="5" Grid.Row="1" Stretch="Fill"/>
-            <Rectangle x:Name="r14" Grid.Column="6" Grid.Row="1" Stretch="Fill"/>
-            <Rectangle x:Name="r15" Grid.Column="7" Grid.Row="1" Stretch="Fill"/>
-            <Rectangle x:Name="r16" Grid.Column="0" Grid.Row="2" Stretch="Fill"/>
-            <Rectangle x:Name="r17" Grid.Column="1" Grid.Row="2" Stretch="Fill"/>
-            <Rectangle x:Name="r18" Grid.Column="2" Grid.Row="2" Stretch="Fill"/>
-            <Rectangle x:Name="r19" Grid.Column="3" Grid.Row="2" Stretch="Fill"/>
-            <Rectangle x:Name="r20" Grid.Column="4" Grid.Row="2" Stretch="Fill"/>
-            <Rectangle x:Name="r21" Grid.Column="5" Grid.Row="2" Stretch="Fill"/>
-            <Rectangle x:Name="r22" Grid.Column="6" Grid.Row="2" Stretch="Fill"/>
-            <Rectangle x:Name="r23" Grid.Column="7" Grid.Row="2" Stretch="Fill"/>
-            <Rectangle x:Name="r24" Grid.Column="0" Grid.Row="3" Stretch="Fill"/>
-            <Rectangle x:Name="r25" Grid.Column="1" Grid.Row="3" Stretch="Fill"/>
-            <Rectangle x:Name="r26" Grid.Column="2" Grid.Row="3" Stretch="Fill"/>
-            <Rectangle x:Name="r27" Grid.Column="3" Grid.Row="3" Stretch="Fill"/>
-            <Rectangle x:Name="r28" Grid.Column="4" Grid.Row="3" Stretch="Fill"/>
-            <Rectangle x:Name="r29" Grid.Column="5" Grid.Row="3" Stretch="Fill"/>
-            <Rectangle x:Name="r30" Grid.Column="6" Grid.Row="3" Stretch="Fill"/>
-            <Rectangle x:Name="r31" Grid.Column="7" Grid.Row="3" Stretch="Fill"/>
-            <Rectangle x:Name="r32" Grid.Column="0" Grid.Row="4" Stretch="Fill"/>
-            <Rectangle x:Name="r33" Grid.Column="1" Grid.Row="4" Stretch="Fill"/>
-            <Rectangle x:Name="r34" Grid.Column="2" Grid.Row="4" Stretch="Fill"/>
-            <Rectangle x:Name="r35" Grid.Column="3" Grid.Row="4" Stretch="Fill"/>
-            <Rectangle x:Name="r36" Grid.Column="4" Grid.Row="4" Stretch="Fill"/>
-            <Rectangle x:Name="r37" Grid.Column="5" Grid.Row="4" Stretch="Fill"/>
-            <Rectangle x:Name="r38" Grid.Column="6" Grid.Row="4" Stretch="Fill"/>
-            <Rectangle x:Name="r39" Grid.Column="7" Grid.Row="4" Stretch="Fill"/>
-            <Rectangle x:Name="r40" Grid.Column="0" Grid.Row="5" Stretch="Fill"/>
-            <Rectangle x:Name="r41" Grid.Column="1" Grid.Row="5" Stretch="Fill"/>
-            <Rectangle x:Name="r42" Grid.Column="2" Grid.Row="5" Stretch="Fill"/>
-            <Rectangle x:Name="r43" Grid.Column="3" Grid.Row="5" Stretch="Fill"/>
-            <Rectangle x:Name="r44" Grid.Column="4" Grid.Row="5" Stretch="Fill"/>
-            <Rectangle x:Name="r45" Grid.Column="5" Grid.Row="5" Stretch="Fill"/>
-            <Rectangle x:Name="r46" Grid.Column="6" Grid.Row="5" Stretch="Fill"/>
-            <Rectangle x:Name="r47" Grid.Column="7" Grid.Row="5" Stretch="Fill"/>
-            <Rectangle x:Name="r48" Grid.Column="0" Grid.Row="6" Stretch="Fill"/>
-            <Rectangle x:Name="r49" Grid.Column="1" Grid.Row="6" Stretch="Fill"/>
-            <Rectangle x:Name="r50" Grid.Column="2" Grid.Row="6" Stretch="Fill"/>
-            <Rectangle x:Name="r51" Grid.Column="3" Grid.Row="6" Stretch="Fill"/>
-            <Rectangle x:Name="r52" Grid.Column="4" Grid.Row="6" Stretch="Fill"/>
-            <Rectangle x:Name="r53" Grid.Column="5" Grid.Row="6" Stretch="Fill"/>
-            <Rectangle x:Name="r54" Grid.Column="6" Grid.Row="6" Stretch="Fill"/>
-            <Rectangle x:Name="r55" Grid.Column="7" Grid.Row="6" Stretch="Fill"/>
-            <Rectangle x:Name="r56" Grid.Column="0" Grid.Row="7" Stretch="Fill"/>
-            <Rectangle x:Name="r57" Grid.Column="1" Grid.Row="7" Stretch="Fill"/>
-            <Rectangle x:Name="r58" Grid.Column="2" Grid.Row="7" Stretch="Fill"/>
-            <Rectangle x:Name="r59" Grid.Column="3" Grid.Row="7" Stretch="Fill"/>
-            <Rectangle x:Name="r60" Grid.Column="4" Grid.Row="7" Stretch="Fill"/>
-            <Rectangle x:Name="r61" Grid.Column="5" Grid.Row="7" Stretch="Fill"/>
-            <Rectangle x:Name="r62" Grid.Column="6" Grid.Row="7" Stretch="Fill"/>
-            <Rectangle x:Name="r63" Grid.Column="7" Grid.Row="7" Stretch="Fill"/>
-
-            <Image x:Name="i0" Grid.Column="0" Grid.Row="0"/>
-            <Image x:Name="i1" Grid.Column="1" Grid.Row="0"/>
-            <Image x:Name="i2" Grid.Column="2" Grid.Row="0"/>
-            <Image x:Name="i3" Grid.Column="3" Grid.Row="0"/>
-            <Image x:Name="i4" Grid.Column="4" Grid.Row="0"/>
-            <Image x:Name="i5" Grid.Column="5" Grid.Row="0"/>
-            <Image x:Name="i6" Grid.Column="6" Grid.Row="0"/>
-            <Image x:Name="i7" Grid.Column="7" Grid.Row="0"/>
-            <Image x:Name="i8" Grid.Column="0" Grid.Row="1"/>
-            <Image x:Name="i9" Grid.Column="1" Grid.Row="1"/>
-            <Image x:Name="i10" Grid.Column="2" Grid.Row="1"/>
-            <Image x:Name="i11" Grid.Column="3" Grid.Row="1"/>
-            <Image x:Name="i12" Grid.Column="4" Grid.Row="1"/>
-            <Image x:Name="i13" Grid.Column="5" Grid.Row="1"/>
-            <Image x:Name="i14" Grid.Column="6" Grid.Row="1"/>
-            <Image x:Name="i15" Grid.Column="7" Grid.Row="1"/>
-            <Image x:Name="i16" Grid.Column="0" Grid.Row="2"/>
-            <Image x:Name="i17" Grid.Column="1" Grid.Row="2"/>
-            <Image x:Name="i18" Grid.Column="2" Grid.Row="2"/>
-            <Image x:Name="i19" Grid.Column="3" Grid.Row="2"/>
-            <Image x:Name="i20" Grid.Column="4" Grid.Row="2"/>
-            <Image x:Name="i21" Grid.Column="5" Grid.Row="2"/>
-            <Image x:Name="i22" Grid.Column="6" Grid.Row="2"/>
-            <Image x:Name="i23" Grid.Column="7" Grid.Row="2"/>
-            <Image x:Name="i24" Grid.Column="0" Grid.Row="3"/>
-            <Image x:Name="i25" Grid.Column="1" Grid.Row="3"/>
-            <Image x:Name="i26" Grid.Column="2" Grid.Row="3"/>
-            <Image x:Name="i27" Grid.Column="3" Grid.Row="3"/>
-            <Image x:Name="i28" Grid.Column="4" Grid.Row="3"/>
-            <Image x:Name="i29" Grid.Column="5" Grid.Row="3"/>
-            <Image x:Name="i30" Grid.Column="6" Grid.Row="3"/>
-            <Image x:Name="i31" Grid.Column="7" Grid.Row="3"/>
-            <Image x:Name="i32" Grid.Column="0" Grid.Row="4"/>
-            <Image x:Name="i33" Grid.Column="1" Grid.Row="4"/>
-            <Image x:Name="i34" Grid.Column="2" Grid.Row="4"/>
-            <Image x:Name="i35" Grid.Column="3" Grid.Row="4"/>
-            <Image x:Name="i36" Grid.Column="4" Grid.Row="4"/>
-            <Image x:Name="i37" Grid.Column="5" Grid.Row="4"/>
-            <Image x:Name="i38" Grid.Column="6" Grid.Row="4"/>
-            <Image x:Name="i39" Grid.Column="7" Grid.Row="4"/>
-            <Image x:Name="i40" Grid.Column="0" Grid.Row="5"/>
-            <Image x:Name="i41" Grid.Column="1" Grid.Row="5"/>
-            <Image x:Name="i42" Grid.Column="2" Grid.Row="5"/>
-            <Image x:Name="i43" Grid.Column="3" Grid.Row="5"/>
-            <Image x:Name="i44" Grid.Column="4" Grid.Row="5"/>
-            <Image x:Name="i45" Grid.Column="5" Grid.Row="5"/>
-            <Image x:Name="i46" Grid.Column="6" Grid.Row="5"/>
-            <Image x:Name="i47" Grid.Column="7" Grid.Row="5"/>
-            <Image x:Name="i48" Grid.Column="0" Grid.Row="6"/>
-            <Image x:Name="i49" Grid.Column="1" Grid.Row="6"/>
-            <Image x:Name="i50" Grid.Column="2" Grid.Row="6"/>
-            <Image x:Name="i51" Grid.Column="3" Grid.Row="6"/>
-            <Image x:Name="i52" Grid.Column="4" Grid.Row="6"/>
-            <Image x:Name="i53" Grid.Column="5" Grid.Row="6"/>
-            <Image x:Name="i54" Grid.Column="6" Grid.Row="6"/>
-            <Image x:Name="i55" Grid.Column="7" Grid.Row="6"/>
-            <Image x:Name="i56" Grid.Column="0" Grid.Row="7"/>
-            <Image x:Name="i57" Grid.Column="1" Grid.Row="7"/>
-            <Image x:Name="i58" Grid.Column="2" Grid.Row="7"/>
-            <Image x:Name="i59" Grid.Column="3" Grid.Row="7"/>
-            <Image x:Name="i60" Grid.Column="4" Grid.Row="7"/>
-            <Image x:Name="i61" Grid.Column="5" Grid.Row="7"/>
-            <Image x:Name="i62" Grid.Column="6" Grid.Row="7"/>
-            <Image x:Name="i63" Grid.Column="7" Grid.Row="7"/>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
             </Grid>
         </Viewbox>
     </Grid>

@@ -68,14 +68,6 @@ namespace Chess
             SetPieces();
         }
 
-        private void SetPieces()
-        {
-            for (int i = 0; i < 64; i++)
-            {
-                SetPieceAt(i, BoardMain.pos[i]);
-            }
-        }
-
         private void PaintSquares()
         {
             bool even = true;
@@ -94,25 +86,31 @@ namespace Chess
 
         private void PaintSquare(int[] pos, SolidColorBrush brush)
         {
-            Rectangle r = RectangleAtCell(pos[0], pos[1], GridBoard);
-
-            if (r == null)
-                MBNull(pos.ToString() + "has no rectangle to paint");
-            else
+            try
+            {
+                Rectangle r = RectangleAtCell(pos[0], pos[1], GridBoard);
                 r.Fill = brush;
+            }
+            catch
+            {
+                DrawSquare(pos, brush);
+                PaintSquare(pos, brush);
+            }
         }
 
-        private void SetPieceImage(int[] pos, string colour, string piece)
+        private void DrawSquare(int[] pos, SolidColorBrush brush)
         {
-
-            Image i = ImageAtCell(pos[0], pos[1], GridBoard);
-
-            if (i == null)
-                MBNull(pos.ToString() + "has no image to set source");
-            else if (piece == "Null")
-                i.Source = SourceBlank;
-            else
-                i.Source = conv.ConvertFromString("data/" + piece + colour + ".png") as ImageSource;
+            Rectangle r = new Rectangle();
+            GridBoard.Children.Add(r);
+            Grid.SetRow(r, pos[0]);
+            Grid.SetColumn(r, pos[1]);
+        }
+        private void SetPieces()
+        {
+            for (int i = 0; i < 64; i++)
+            {
+                SetPieceAt(i, BoardMain.pos[i]);
+            }
         }
 
         private void SetPieceAt(int i, char c)
@@ -136,6 +134,31 @@ namespace Chess
             int[] pos = IntPos(i);
 
             SetPieceImage(pos, colour.ToString(), piece.ToString());
+        }
+
+        private void SetPieceImage(int[] pos, string colour, string piece)
+        {
+            try
+            {
+                Image i = ImageAtCell(pos[0], pos[1], GridBoard);
+                if (piece == "Null")
+                    i.Source = SourceBlank;
+                else
+                    i.Source = conv.ConvertFromString("data/" + piece + colour + ".png") as ImageSource;
+            }
+            catch
+            {
+                DrawPieceImage(pos);
+                SetPieceImage(pos, colour, piece);
+            }
+        }
+
+        private void DrawPieceImage(int[] pos)
+        {
+            Image i = new Image();
+            GridBoard.Children.Add(i);
+            Grid.SetRow(i, pos[0]);
+            Grid.SetColumn(i, pos[1]);
         }
 
         private static Rectangle RectangleAtCell(int row, int column, Grid grid)

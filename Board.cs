@@ -140,5 +140,14 @@ namespace Chess
             a[1] = i % 8; //IntPos[1] = column
             return a;
         }
+
+        internal List<int> LegalMoves()
+        {
+            List<int> moves = new List<int>();
+
+
+
+            return moves;
+        }
     }
 }
