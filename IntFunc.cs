@@ -52,5 +52,27 @@ namespace Chess
             }
             return i;
         }
+
+        internal static int[] Increment2D(int[] a, int cap) //only for int[2]
+        {
+            if (a[1] == cap)
+            {
+                a[1] = 0;
+                a[0] += 1;
+            }
+            else
+            {
+                a[1] += 1;
+            }
+            return a;
+        }
+
+        internal static bool IsMax2D(int[] a, int cap)
+        {
+            if (a[0] == cap + 1)
+                return true;
+            else
+                return false;
+        }
     }
 }

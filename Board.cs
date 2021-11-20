@@ -14,19 +14,24 @@ namespace Chess
 
     internal class Board
     {
-        internal char[] pos = new char[64];
+        internal char[,] pos = new char[8,8];
         internal ECOLOUR turn = ECOLOUR.Null;
         internal char[] castle = new char[4];
         internal int passant = 0;
         internal int halfm = 0;
         internal int fullm = 0;
+
+        internal Board()
+        {
+
+        }
         internal Board(string fen)
         {
             //int fenpos = 0;
             EFENPOS fenpos = EFENPOS.Pieces;
-            int boardpos = 0; //a8(0)->h8(7)->b7(8) etc.
+            int[] boardpos = new int[2]; //a8(0)->h8(7)->b7(8) etc.
 
-            char[] pos = new char[64];
+            char[,] pos = new char[8,8];
             ECOLOUR turn = ECOLOUR.Null;
             char[] castle = new char[4];
             int passant = 0;
@@ -41,14 +46,17 @@ namespace Chess
                     case EFENPOS.Pieces:
                         if (IsPiece(c)) //piece
                         {
-                            pos[boardpos] = c;
-                            boardpos++;
+                            pos[boardpos[0],boardpos[1]] = c;
+                            boardpos = Increment2D(boardpos, 7);
                         }
                         else if (IsNum(c)) //blank spaces
                         {
-                            boardpos += GetNum(c);
+                            for (int i = 0; i < GetNum(c); i++)
+                            {
+                                boardpos = Increment2D(boardpos, 7);
+                            }
                         }
-                        if (boardpos == 64)
+                        if (IsMax2D(boardpos, 7))
                             fenpos++;
                         break;
                     case EFENPOS.Turn:
@@ -99,7 +107,7 @@ namespace Chess
                         break;
                 }
             }
-            if (boardpos != 64)
+            if (!IsMax2D(boardpos, 7))
                 throw new Exception("Invalid board state, check FEN");
             else if (turn == ECOLOUR.Null)
                 throw new Exception("Invalid turn colour, must be 'w' or 'b'");
@@ -133,19 +141,32 @@ namespace Chess
                 return false;
         }
 
-        internal static int[] IntPos(int i) //7 = 0,7  42 = 5,2
+        internal static int[] IntToCoord(int i) //7 = 0,7  42 = 5,2
         {
             int[] a = new int[2];
             a[0] = i / 8; //IntPos[0] = row
             a[1] = i % 8; //IntPos[1] = column
             return a;
         }
+        internal static int CoordToInt(int[] a)
+        {
+            int i = 0;
+            i += a[0] * 8;
+            i += a[1];
+            return i;
+        }
+
+        internal void Move(int[] pos1, int[] pos2)
+        {
+            pos[pos2[0],pos2[1]] = pos[pos1[0],pos1[1]];
+            pos[pos1[0],pos1[1]] = '\0';
+        }
 
         internal List<int> LegalMoves()
         {
             List<int> moves = new List<int>();
 
-
+            
 
             return moves;
         }

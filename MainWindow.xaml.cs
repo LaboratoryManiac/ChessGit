@@ -32,7 +32,7 @@ namespace Chess
         }
 
         string StringBoardStart = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-        Board BoardMain = new Board("8/8/8/8/8/8/8/8 w - - 0 1");
+        Board BoardMain = new Board();
         SolidColorBrush brushBlack = new SolidColorBrush(Color.FromRgb(70, 0, 0));
         SolidColorBrush brushWhite = new SolidColorBrush(Color.FromRgb(214, 228, 223));
 
@@ -44,9 +44,11 @@ namespace Chess
         //if mults are used for non-square images probably use an X and Y mult
 
         //mult * size = offset of drag-and-drop image - by default it may not be in the right place relative to cursor to look good
-        double DRAG_OFFSET_MULT = -0.027;
+        double DRAG_OFFSET_MULT = -0.053;
         //mult * size = size change of drag-and-drop image
         double DRAG_SIZE_MULT = -0.889;
+
+        double LowerWindowLength = 0;
         public MainWindow()
         {
             SourceBlank = conv.ConvertFromString("data/Blank.png") as ImageSource;
@@ -73,7 +75,7 @@ namespace Chess
             bool even = true;
             for (int i = 0; i < 64; i++)
             {
-                int[] pos = IntPos(i);
+                int[] pos = IntToCoord(i);
 
                 if (pos[1] == 0) //switch on start of each row (i % 8 == 0) otherwise you have columns of the same colour
                     even = !even;
@@ -107,13 +109,19 @@ namespace Chess
         }
         private void SetPieces()
         {
-            for (int i = 0; i < 64; i++)
+            for (int i = 0; i < 8; i++)
             {
-                SetPieceAt(i, BoardMain.pos[i]);
+                for (int j = 0; j < 8; j++)
+                {
+                    int[] a = new int[2];
+                    a[0] = i;
+                    a[1] = j;
+                    SetPieceAt(a, BoardMain.pos[i,j]);
+                }
             }
         }
 
-        private void SetPieceAt(int i, char c)
+        private void SetPieceAt(int[] a, char c)
         {
             ECOLOUR colour;
             if (IsUpper(c))
@@ -131,9 +139,7 @@ namespace Chess
                 _ => EPIECE.Null
             };
 
-            int[] pos = IntPos(i);
-
-            SetPieceImage(pos, colour.ToString(), piece.ToString());
+            SetPieceImage(a, colour.ToString(), piece.ToString());
         }
 
         private void SetPieceImage(int[] pos, string colour, string piece)
@@ -215,8 +221,8 @@ namespace Chess
             if (ImageDrag.IsMouseCaptured)
             {
                 Point msPos = e.GetPosition(CanvasDrag);
-                msPos.X += DRAG_OFFSET_MULT * GridBoard.ActualWidth;
-                msPos.Y += DRAG_OFFSET_MULT * GridBoard.ActualHeight;
+                msPos.X += DRAG_OFFSET_MULT * LowerWindowLength;
+                msPos.Y += DRAG_OFFSET_MULT * LowerWindowLength;
                 ImageDrag.RenderTransform = new TranslateTransform(msPos.X, msPos.Y);
             }
         }
@@ -238,8 +244,12 @@ namespace Chess
                         if (true)//TODO move is in legalmove list
                         {
                             Image newImage = (Image)e.MouseDevice.DirectlyOver;
-                            int[] pos = MouseGridPos(newImage);
                             newImage.Source = SourceDragTemp;
+
+                            int[] pos1 = MouseGridPos(ImageDragTemp);
+                            int[] pos2 = MouseGridPos(newImage);
+
+                            BoardMain.Move(pos1, pos2);
                         }
                         else
                         {
@@ -275,9 +285,9 @@ namespace Chess
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            double d = GetLower(this.ActualHeight, this.ActualWidth);
-            ImageDrag.MaxHeight = d + DRAG_SIZE_MULT * d;
-            ImageDrag.MaxWidth = d + DRAG_SIZE_MULT * d;
+            LowerWindowLength = GetLower(this.ActualHeight, this.ActualWidth);
+            ImageDrag.MaxHeight = LowerWindowLength + DRAG_SIZE_MULT * LowerWindowLength;
+            ImageDrag.MaxWidth = LowerWindowLength + DRAG_SIZE_MULT * LowerWindowLength;
         }
     }
 }
