@@ -56,7 +56,7 @@ namespace Chess
             InitializeComponent();
 
             DrawBoard();
-            LoadFen(BoardMain, StringBoardStart);
+            LoadFen(BoardMain, "rnbqkbnr/1pp1pppp/8/p2pP3/8/8/PPPP1PPP/RNBQKBNR w KQkq d6 0 3");
             LoadBoardState(BoardMain);
         }
 
@@ -67,7 +67,8 @@ namespace Chess
 
         private void LoadBoardState(Board board)
         {
-            SetPieces();
+            SetPieces(board.pieces);
+            SetTurn(board.turn);
         }
 
         private void PaintSquares()
@@ -107,7 +108,7 @@ namespace Chess
             Grid.SetRow(r, pos[0]);
             Grid.SetColumn(r, pos[1]);
         }
-        private void SetPieces()
+        private void SetPieces(char[,] pieces)
         {
             for (int i = 0; i < 8; i++)
             {
@@ -116,7 +117,7 @@ namespace Chess
                     int[] a = new int[2];
                     a[0] = i;
                     a[1] = j;
-                    SetPieceAt(a, BoardMain.pos[i,j]);
+                    SetPieceAt(a, pieces[i,j]);
                 }
             }
         }
@@ -165,6 +166,11 @@ namespace Chess
             GridBoard.Children.Add(i);
             Grid.SetRow(i, pos[0]);
             Grid.SetColumn(i, pos[1]);
+        }
+
+        private void SetTurn(ECOLOUR colour)
+        {
+            ImageTurn.Source = conv.ConvertFromString("data/" + "King" + colour + ".png") as ImageSource;
         }
 
         private static Rectangle RectangleAtCell(int row, int column, Grid grid)
@@ -249,7 +255,7 @@ namespace Chess
                             int[] pos1 = MouseGridPos(ImageDragTemp);
                             int[] pos2 = MouseGridPos(newImage);
 
-                            BoardMain.Move(pos1, pos2);
+                            MovePiece(pos1, pos2, BoardMain);
                         }
                         else
                         {
@@ -266,6 +272,12 @@ namespace Chess
                     ResetDragged(ImageDragTemp, SourceDragTemp); //not on board, reset
                 }
             }
+        }
+
+        private void MovePiece(int[] pos1, int[] pos2, Board board)
+        {
+            board.Move(pos1, pos2);
+            SetTurn(board.turn);
         }
 
         private void ResetDragged(Image im, ImageSource so)

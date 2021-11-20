@@ -8,12 +8,12 @@ namespace Chess
 {
     internal static class CharFunc
     {
-        internal static int ToNum(char c) //for letters, a = 0, b = 1...
+        internal static int CharToNum(char c) //for letters, e.g. char a -> int 0, char b -> int 1...
         {
             c = ToUpper(c);
             return c - 65;
         }
-        internal static int GetNum(char c) //should use with IsNum
+        internal static int GetNum(char c) //for numbers, e.g. char 49[1] -> int 1
         {
             return c - 48;
         }
@@ -31,14 +31,14 @@ namespace Chess
         }
         internal static bool IsUpper(char c)
         {
-            if (c > 64 && c < 91)
+            if (IsBetween(c, 64, 91))
                 return true;
             else
                 return false;
         }
         internal static bool IsAlpha(char c)
         {
-            if ((c > 64 && c < 91) || (c > 96 && c < 123))
+            if (IsBetween(c,64,91) || IsBetween(c, 96, 123))
                 return true;
             else
                 return false;
@@ -46,7 +46,7 @@ namespace Chess
 
         internal static bool IsNum(char c)
         {
-            if (c > 47 && c < 58)
+            if (IsBetween(c, 47, 58))
                 return true;
             else
                 return false;
@@ -54,6 +54,22 @@ namespace Chess
         internal static bool IsEqual(char c, char d)
         {
             if (c == d)
+                return true;
+            else
+                return false;
+        }
+
+        internal static bool IsBetween(char c, int i, int j)
+        {
+            if (c > i && c < j)
+                return true;
+            else
+                return false;
+        }
+
+        internal static bool IsSingleDigit(char c) //single digit natural number (1-9)
+        {
+            if (IsBetween(c, 48, 58))
                 return true;
             else
                 return false;
