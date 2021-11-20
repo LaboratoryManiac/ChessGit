@@ -30,7 +30,7 @@
         </Canvas>
 
         <Viewbox Stretch="Uniform" Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="2" Grid.RowSpan="1">
-        <Grid x:Name="GridBoard" MouseDown="GridBoard_MouseDown" MouseUp="GridBoard_MouseUp" >
+        <Grid x:Name="GridBoard" MouseDown="GridBoard_MouseDown">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>

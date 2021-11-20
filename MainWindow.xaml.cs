@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static Chess.Board;
 using static Chess.CharFunc;
 using static Chess.IntFunc;
 
@@ -76,53 +77,34 @@ namespace Chess
             bool even = true;
             for (int i = 0; i < 64; i++)
             {
-                if (i % 8 == 0)
+                int[] pos = IntPos(i);
+
+                if (pos[1] == 0) //switch on start of each row (i % 8 == 0) otherwise you have columns of the same colour
                     even = !even;
                 if (IsEven(i) == even)
-                    PaintSquare(i, brushBlack);
+                    PaintSquare(pos, brushBlack);
                 else
-                    PaintSquare(i, brushWhite);
+                    PaintSquare(pos, brushWhite);
             }
         }
 
-        private void PaintSquare(int pos, SolidColorBrush brush)
+        private void PaintSquare(int[] pos, SolidColorBrush brush)
         {
-            string name = "r" + pos.ToString();
-            Rectangle r = (Rectangle)FindDescendant(GridBoard, name);
+            Rectangle r = RectangleAtCell(pos[0], pos[1], GridBoard);
+
             if (r == null)
-                MBNull(name);
+                MBNull(pos.ToString() + "has no rectangle to paint");
             else
                 r.Fill = brush;
         }
 
-        // Find a descendant control by name.
-        private static DependencyObject FindDescendant(
-            DependencyObject parent, string name)
+        private void SetPieceImage(int[] pos, string colour, string piece)
         {
-            // See if this object has the target name.
-            FrameworkElement element = parent as FrameworkElement;
-            if ((element != null) && (element.Name == name)) return parent;
 
-            // Recursively check the children.
-            int num_children = VisualTreeHelper.GetChildrenCount(parent);
-            for (int i = 0; i < num_children; i++)
-            {
-                // See if this child has the target name.
-                DependencyObject child = VisualTreeHelper.GetChild(parent, i);
-                DependencyObject descendant = FindDescendant(child, name);
-                if (descendant != null) return descendant;
-            }
+            Image i = ImageAtCell(pos[0], pos[1], GridBoard);
 
-            // We didn't find a descendant with the target name.
-            return null;
-        }
-
-        private void SetPieceImage(int pos, string colour, string piece)
-        {
-            string name = "i" + pos.ToString();
-            Image i = (Image)FindDescendant(GridBoard, name);
             if (i == null)
-                MBNull(name);
+                MBNull(pos.ToString() + "has no image to set source");
             else if (piece == "Null")
                 i.Source = SourceBlank;
             else
@@ -146,7 +128,24 @@ namespace Chess
                 'P' => EPIECE.Pawn,
                 _ => EPIECE.Null
             };
-            SetPieceImage(i, colour.ToString(), piece.ToString());
+
+            int[] pos = IntPos(i);
+
+            SetPieceImage(pos, colour.ToString(), piece.ToString());
+        }
+
+        private static Rectangle RectangleAtCell(int row, int column, Grid grid)
+        {
+            return ElementsAtCell(row, column, grid).OfType<Rectangle>().First();
+        }
+        private static Image ImageAtCell(int row, int column, Grid grid)
+        {
+            return ElementsAtCell(row, column, grid).OfType<Image>().First();
+        }
+
+        private static IEnumerable<UIElement> ElementsAtCell(int row, int column, Grid grid)
+        {
+            return grid.Children.Cast<UIElement>().Where(e => Grid.GetRow(e) == row && Grid.GetColumn(e) == column);
         }
 
         private void ButtonFen_Click(object sender, RoutedEventArgs e)
@@ -170,7 +169,7 @@ namespace Chess
         private void GridBoard_MouseDown(object sender, MouseButtonEventArgs e)
         {
             ImageDragTemp = (Image)e.MouseDevice.DirectlyOver;
-            int pos = MouseGridPos(ImageDragTemp);
+            int[] pos = MouseGridPos(ImageDragTemp);
             SourceDragTemp = ImageDragTemp.Source;
 
             if (SourceDragTemp != SourceBlank) //if square not empty
@@ -195,40 +194,48 @@ namespace Chess
             }
         }
 
-        private void GridBoard_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            if (true)//TODO move is in legalmove list
-            {
-                Image newImage = (Image)e.MouseDevice.DirectlyOver;
-                int pos = MouseGridPos(newImage);
-                newImage.Source = SourceDragTemp;
-            }
-            else
-            {
-                ImageDragTemp.Source = SourceDragTemp;
-            }
-
-
-        }
-
         private void ImageDrag_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (ImageDrag.IsMouseCaptured)
+            if (ImageDrag.IsMouseCaptured) //should be unneccessary
             {
                 Cursor = Cursors.Arrow;
                 ImageDrag.Visibility = Visibility.Collapsed;
                 ImageDrag.ReleaseMouseCapture();
 
-                GridBoard.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, Environment.TickCount, MouseButton.Left) { RoutedEvent = Button.MouseUpEvent });
+                UIElement parent = VisualTreeHelper.GetParent((UIElement)e.MouseDevice.DirectlyOver) as UIElement;
+                if (parent == GridBoard)
+                {
+                    if (true)//TODO move is in legalmove list
+                    {
+                        Image newImage = (Image)e.MouseDevice.DirectlyOver;
+                        int[] pos = MouseGridPos(newImage);
+                        newImage.Source = SourceDragTemp;
+                    }
+                    else
+                    {
+                        ResetDragged(ImageDragTemp, SourceDragTemp); //illegal move, reset
+                    }
+                }
+                else
+                {
+                    ResetDragged(ImageDragTemp, SourceDragTemp); //not on board, reset
+                }
             }
         }
 
-        private int MouseGridPos(Image element)
+        private void ResetDragged(Image im, ImageSource so)
         {
-            int row = Grid.GetRow(element);
-            int column = Grid.GetColumn(element);
+            im.Source = so;
+        }
 
-            return row * 8 + column;
+        private int[] MouseGridPos(Image element)
+        {
+            int[] pos = new int[2];
+
+            pos[0] = Grid.GetRow(element);
+            pos[1] = Grid.GetColumn(element);
+
+            return pos;
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)

@@ -132,5 +132,13 @@ namespace Chess
             else
                 return false;
         }
+
+        internal static int[] IntPos(int i) //7 = 0,7  42 = 5,2
+        {
+            int[] a = new int[2];
+            a[0] = i / 8; //IntPos[0] = row
+            a[1] = i % 8; //IntPos[1] = column
+            return a;
+        }
     }
 }

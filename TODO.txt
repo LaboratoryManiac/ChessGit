@@ -1,2 +1,2 @@
-﻿Ability to move pieces - drag and drop and/or click piece then click destination
+﻿Dragged piece should be correct size and scale with window - currently is too large for default window and also does not scale up/down with window size
 Highlight/allow only legal moves
