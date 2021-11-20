@@ -52,7 +52,7 @@
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
             
-            <Rectangle x:Name="r0" Grid.Column="0" Grid.Row="0" Stretch="Fill" SizeChanged="r0_SizeChanged" />
+            <Rectangle x:Name="r0" Grid.Column="0" Grid.Row="0" Stretch="Fill"/>
             <Rectangle x:Name="r1" Grid.Column="1" Grid.Row="0" Stretch="Fill"/>
             <Rectangle x:Name="r2" Grid.Column="2" Grid.Row="0" Stretch="Fill"/>
             <Rectangle x:Name="r3" Grid.Column="3" Grid.Row="0" Stretch="Fill"/>

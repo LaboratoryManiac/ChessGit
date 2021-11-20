@@ -169,9 +169,8 @@ namespace Chess
 
         private void GridBoard_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            int pos = MouseGridPos((UIElement)e.Source);
-
-            ImageDragTemp = (Image)FindDescendant(GridBoard, "i" + pos.ToString());
+            ImageDragTemp = (Image)e.MouseDevice.DirectlyOver;
+            int pos = MouseGridPos(ImageDragTemp);
             SourceDragTemp = ImageDragTemp.Source;
 
             if (SourceDragTemp != SourceBlank) //if square not empty
@@ -198,11 +197,10 @@ namespace Chess
 
         private void GridBoard_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (true)//move is in legalmove list
+            if (true)//TODO move is in legalmove list
             {
-                int pos = MouseGridPos((UIElement)e.Source);
-
-                Image newImage = (Image)FindDescendant(GridBoard, "i" + pos.ToString());
+                Image newImage = (Image)e.MouseDevice.DirectlyOver;
+                int pos = MouseGridPos(newImage);
                 newImage.Source = SourceDragTemp;
             }
             else
@@ -211,20 +209,21 @@ namespace Chess
             }
 
 
-            Cursor = Cursors.Arrow;
-            ImageDrag.Visibility = Visibility.Collapsed;
         }
 
         private void ImageDrag_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (ImageDrag.IsMouseCaptured)
             {
+                Cursor = Cursors.Arrow;
+                ImageDrag.Visibility = Visibility.Collapsed;
                 ImageDrag.ReleaseMouseCapture();
+
                 GridBoard.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, Environment.TickCount, MouseButton.Left) { RoutedEvent = Button.MouseUpEvent });
             }
         }
 
-        private int MouseGridPos(UIElement element)
+        private int MouseGridPos(Image element)
         {
             int row = Grid.GetRow(element);
             int column = Grid.GetColumn(element);
@@ -232,10 +231,10 @@ namespace Chess
             return row * 8 + column;
         }
 
-        private void r0_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            ImageDrag.Height = r0.Height;
-            ImageDrag.Width = r0.Width;
+            ImageDrag.MaxHeight = r0.ActualHeight;
+            ImageDrag.MaxWidth = r0.ActualWidth;
         }
     }
 }
