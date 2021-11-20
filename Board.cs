@@ -88,7 +88,7 @@ namespace Chess
                         }
                         else
                         {
-                            passant = GetPos(passant, GetNum(c));
+                            passant = GetPosFromCoord(passant, GetNum(c));
                         }
                         break;
                     case EFENPOS.HalfM:
@@ -111,7 +111,7 @@ namespace Chess
             this.fullm = fullm;
         }
 
-        static int GetPos(int a, int b) //must be "e5" etc.
+        static int GetPosFromCoord(int a, int b) //must be "e5" etc.
         {
             int i = Positive(b - 8);
             i *= 8;

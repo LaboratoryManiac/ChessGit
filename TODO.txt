@@ -1,3 +1,2 @@
-﻿Chess board should be square but scale to size of window as long as it maintains aspect ratio
-Ability to move pieces - drag and drop and/or click piece then click destination
+﻿Ability to move pieces - drag and drop and/or click piece then click destination
 Highlight/allow only legal moves
