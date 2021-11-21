@@ -12,9 +12,9 @@
             <ColumnDefinition Width="300*"/>
             <ColumnDefinition Width="80*"/>
             <ColumnDefinition Width="50*"/>
-            <ColumnDefinition Width="50*"/>
-            <ColumnDefinition Width="50*"/>
             <ColumnDefinition Width="20*"/>
+            <ColumnDefinition Width="50*"/>
+            <ColumnDefinition Width="50*"/>
             <ColumnDefinition Width="30*"/>
             <ColumnDefinition Width="50*"/>
             <ColumnDefinition Width="50*"/>
@@ -34,9 +34,11 @@
             <Image x:Name="ImageDrag" Stretch="Fill" MouseMove="ImageDrag_MouseMove" MouseUp="ImageDrag_MouseUp" Visibility="Collapsed"/>
         </Canvas>
 
-        <Image x:Name="ImageTurn" Grid.Column="6" Grid.Row="1"/>
+        <Image x:Name="ImageTurn" Grid.Column="4" Grid.Row="1"/>
+        <Label x:Name="LabelHalfM" Grid.Column="5" Grid.Row="1" Grid.ColumnSpan="4" Content="Moves since capture/pawn move:"/>
+        <Label x:Name="LabelFullM" Grid.Column="9" Grid.Row="1" Content="Moves:"/>
 
-        <Viewbox Stretch="Uniform" Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="2" Grid.RowSpan="1">
+        <Viewbox Stretch="Uniform" Grid.Column="1" Grid.ColumnSpan="9" Grid.Row="2">
         <Grid x:Name="GridBoard" MouseDown="GridBoard_MouseDown">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>

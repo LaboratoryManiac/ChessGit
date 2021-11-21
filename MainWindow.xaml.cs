@@ -56,7 +56,7 @@ namespace Chess
             InitializeComponent();
 
             DrawBoard();
-            LoadFen(BoardMain, "rnbqkbnr/1pp1pppp/8/p2pP3/8/8/PPPP1PPP/RNBQKBNR w KQkq d6 0 3");
+            LoadFen(BoardMain, "2rnrqk1/pppb1ppp/3p1b2/3BpNB1/3PP1n1/5N2/PPPQ1PPP/3RR1K1 w - - 54 30");
             LoadBoardState(BoardMain);
         }
 
@@ -67,8 +67,10 @@ namespace Chess
 
         private void LoadBoardState(Board board)
         {
-            SetPieces(board.pieces);
+            SetPieces(board);
             SetTurn(board.turn);
+            SetHalfM(board.halfm);
+            SetFullM(board.fullm);
         }
 
         private void PaintSquares()
@@ -108,17 +110,12 @@ namespace Chess
             Grid.SetRow(r, pos[0]);
             Grid.SetColumn(r, pos[1]);
         }
-        private void SetPieces(char[,] pieces)
+        private void SetPieces(Board board)
         {
-            for (int i = 0; i < 8; i++)
+            List<int[]> ps = board.GetPieceSquares();
+            foreach (int[] s in ps)
             {
-                for (int j = 0; j < 8; j++)
-                {
-                    int[] a = new int[2];
-                    a[0] = i;
-                    a[1] = j;
-                    SetPieceAt(a, pieces[i,j]);
-                }
+                SetPieceAt(s, board.pieces[s[0], s[1]]);
             }
         }
 
@@ -171,6 +168,16 @@ namespace Chess
         private void SetTurn(ECOLOUR colour)
         {
             ImageTurn.Source = conv.ConvertFromString("data/" + "King" + colour + ".png") as ImageSource;
+        }
+
+        private void SetHalfM(int halfm)
+        {
+            LabelHalfM.Content = "Moves since capture/pawn move: " + halfm.ToString();
+        }
+
+        private void SetFullM(int fullm)
+        {
+            LabelFullM.Content = "Moves: " + fullm.ToString();
         }
 
         private static Rectangle RectangleAtCell(int row, int column, Grid grid)
@@ -247,15 +254,14 @@ namespace Chess
 
                     if (parent == GridBoard)
                     {
-                        if (true)//TODO move is in legalmove list
+                        Image newImage = (Image)e.MouseDevice.DirectlyOver;
+
+                        int[] pos1 = MouseGridPos(ImageDragTemp);
+                        int[] pos2 = MouseGridPos(newImage);
+
+                        if (MovePiece(pos1, pos2, BoardMain))//TODO move is in legalmove list
                         {
-                            Image newImage = (Image)e.MouseDevice.DirectlyOver;
                             newImage.Source = SourceDragTemp;
-
-                            int[] pos1 = MouseGridPos(ImageDragTemp);
-                            int[] pos2 = MouseGridPos(newImage);
-
-                            MovePiece(pos1, pos2, BoardMain);
                         }
                         else
                         {
@@ -274,10 +280,19 @@ namespace Chess
             }
         }
 
-        private void MovePiece(int[] pos1, int[] pos2, Board board)
+        private bool MovePiece(int[] pos1, int[] pos2, Board board)
         {
-            board.Move(pos1, pos2);
-            SetTurn(board.turn);
+            if (board.Move(pos1, pos2))
+            {
+                SetTurn(board.turn);
+                SetHalfM(board.halfm);
+                SetFullM(board.fullm);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         private void ResetDragged(Image im, ImageSource so)

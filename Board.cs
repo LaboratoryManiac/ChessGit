@@ -199,24 +199,68 @@ namespace Chess
             return i;
         }
 
-        internal void Move(int[] pos1, int[] pos2)
+        internal bool Move(int[] pos1, int[] pos2)
         {
-            pieces[pos2[0],pos2[1]] = pieces[pos1[0],pos1[1]];
-            pieces[pos1[0],pos1[1]] = '\0';
-            turn = turn switch
+            foreach(PieceMoves pm in LegalMoves())
             {
-                ECOLOUR.Black => ECOLOUR.White,
-                ECOLOUR.White => ECOLOUR.Black,
-            };
+                if (pm.start == pos1 /*find selected piece*/ && pm.moves.Contains(pos2) /*check if piece can move to destination*/)
+                {
+                    char piece1 = pieces[pos1[0], pos1[1]];
+                    char piece2 = pieces[pos2[0], pos2[1]];
+
+                    pieces[pos2[0], pos2[1]] = piece1;
+                    pieces[pos1[0], pos1[1]] = '\0';
+                    turn = turn switch
+                    {
+                        ECOLOUR.Black => ECOLOUR.White,
+                        ECOLOUR.White => ECOLOUR.Black,
+                    };
+                    // if piece moved was pawn or square moved to had piece (piece was captured)
+                    if (ToUpper(piece1) == 'P' || ToUpper(piece2) != '\0')
+                        halfm = 0;
+                    //else reset
+                    else
+                        halfm += 1;
+                    fullm += 1;
+                    return true;
+                }
+            }
+            return false;
         }
 
-        internal List<int> LegalMoves()
+        internal List<PieceMoves> LegalMoves()
         {
-            List<int> moves = new List<int>();
+            List<PieceMoves> moves = new List<PieceMoves>();
 
-            
+            List<int[]> StList = GetPieceSquares();
+            foreach (int[] s in StList)
+            {
+                moves.Add(new PieceMoves(s, this));
+            }
 
             return moves;
+        }
+
+        internal List<int[]> GetPieceSquares()
+        {
+            List<int[]> PieceSquares = new List<int[]>();
+
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    int[] a = new int[2];
+                    a[0] = i;
+                    a[1] = j;
+
+                    if (pieces[i, j] != '\0')
+                    {
+                        PieceSquares.Add(a);
+                    }
+                }
+            }
+
+            return PieceSquares;
         }
     }
 }
