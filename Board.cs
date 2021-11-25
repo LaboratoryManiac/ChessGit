@@ -201,36 +201,38 @@ namespace Chess
 
         internal bool Move(int[] pos1, int[] pos2)
         {
-            foreach(PieceMoves pm in LegalMoves())
+            if (LegalMoves(pos1).moves.Any(p => p.SequenceEqual(pos2)) /*check if piece can move to destination*/)
             {
-                if (pm.start == pos1 /*find selected piece*/ && pm.moves.Contains(pos2) /*check if piece can move to destination*/)
-                {
-                    char piece1 = pieces[pos1[0], pos1[1]];
-                    char piece2 = pieces[pos2[0], pos2[1]];
+                char piece1 = pieces[pos1[0], pos1[1]];
+                char piece2 = pieces[pos2[0], pos2[1]];
 
-                    pieces[pos2[0], pos2[1]] = piece1;
-                    pieces[pos1[0], pos1[1]] = '\0';
-                    turn = turn switch
-                    {
-                        ECOLOUR.Black => ECOLOUR.White,
-                        ECOLOUR.White => ECOLOUR.Black,
-                    };
-                    // if piece moved was pawn or square moved to had piece (piece was captured)
-                    if (ToUpper(piece1) == 'P' || ToUpper(piece2) != '\0')
-                        halfm = 0;
-                    //else reset
-                    else
-                        halfm += 1;
-                    fullm += 1;
-                    return true;
-                }
+                pieces[pos2[0], pos2[1]] = piece1;
+                pieces[pos1[0], pos1[1]] = '\0';
+                turn = turn switch
+                {
+                    ECOLOUR.Black => ECOLOUR.White,
+                    ECOLOUR.White => ECOLOUR.Black,
+                };
+                // if piece moved was pawn or square moved to had piece (piece was captured)
+                if (ToUpper(piece1) == 'P' || ToUpper(piece2) != '\0')
+                    halfm = 0;
+                //else reset
+                else
+                    halfm += 1;
+                fullm += 1;
+                return true;
             }
             return false;
         }
 
-        internal List<PieceMoves> LegalMoves()
+        internal PieceMoves LegalMoves(int[] pos)
         {
-            List<PieceMoves> moves = new List<PieceMoves>();
+            return new PieceMoves(pos, this);
+        }
+
+        internal List<PieceMoves> AllLegalMoves()
+        {
+            List<PieceMoves> moves = new();
 
             List<int[]> StList = GetPieceSquares();
             foreach (int[] s in StList)

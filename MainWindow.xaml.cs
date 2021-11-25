@@ -51,7 +51,7 @@ namespace Chess
         double LowerWindowLength = 0;
         public MainWindow()
         {
-            SourceBlank = conv.ConvertFromString("data/Blank.png") as ImageSource;
+            SourceBlank = conv.ConvertFromString("data/NullBlack.png") as ImageSource;
 
             InitializeComponent();
 
@@ -112,15 +112,20 @@ namespace Chess
         }
         private void SetPieces(Board board)
         {
-            List<int[]> ps = board.GetPieceSquares();
-            foreach (int[] s in ps)
+            for (int i = 0; i < 8; i++)
             {
-                SetPieceAt(s, board.pieces[s[0], s[1]]);
+                for (int j = 0; j < 8; j++)
+                {
+                    int[] a = new int[] {i, j};
+                    SetPieceAt(a, board);
+                }
             }
         }
 
-        private void SetPieceAt(int[] a, char c)
+        private void SetPieceAt(int[] a, Board board)
         {
+            char c = board.pieces[a[0], a[1]];
+
             ECOLOUR colour;
             if (IsUpper(c))
                 colour = ECOLOUR.White;
@@ -145,10 +150,7 @@ namespace Chess
             try
             {
                 Image i = ImageAtCell(pos[0], pos[1], GridBoard);
-                if (piece == "Null")
-                    i.Source = SourceBlank;
-                else
-                    i.Source = conv.ConvertFromString("data/" + piece + colour + ".png") as ImageSource;
+                i.Source = conv.ConvertFromString("data/" + piece + colour + ".png") as ImageSource;
             }
             catch
             {
@@ -218,10 +220,10 @@ namespace Chess
             int[] pos = MouseGridPos(ImageDragTemp);
             SourceDragTemp = ImageDragTemp.Source;
 
-            if (SourceDragTemp != SourceBlank) //if square not empty
+            if (SourceDragTemp.ToString() != SourceBlank.ToString()) //if square not empty
             { //start dragging
                 ImageDrag.Source = SourceDragTemp;
-                SetPieceImage(pos, "", "Null");
+                SetPieceImage(pos, "Black", "Null");
 
                 Cursor = Cursors.Hand;
                 ImageDrag.Visibility = Visibility.Visible;
