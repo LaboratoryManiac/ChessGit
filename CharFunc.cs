@@ -36,6 +36,13 @@ namespace Chess
             else
                 return false;
         }
+        internal static bool IsLower(char c)
+        {
+            if (IsBetween(c, 96, 123))
+                return true;
+            else
+                return false;
+        }
         internal static bool IsAlpha(char c)
         {
             if (IsBetween(c,64,91) || IsBetween(c, 96, 123))

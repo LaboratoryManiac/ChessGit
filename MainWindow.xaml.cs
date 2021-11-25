@@ -31,32 +31,31 @@ namespace Chess
             MessageBox.Show(s + "is null");
         }
 
-        string StringBoardStart = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-        Board BoardMain = new Board();
-        SolidColorBrush brushBlack = new SolidColorBrush(Color.FromRgb(70, 0, 0));
-        SolidColorBrush brushWhite = new SolidColorBrush(Color.FromRgb(214, 228, 223));
+        private readonly string StringBoardStart = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+        private Board BoardMain = new();
+        private readonly SolidColorBrush brushBlack = new(Color.FromRgb(70, 0, 0));
+        private readonly SolidColorBrush brushWhite = new(Color.FromRgb(214, 228, 223));
+        private readonly ImageSourceConverter conv = new();
+        private readonly ImageSource SourceBlank;
+        private Image ImageDragTemp;
+        private ImageSource SourceDragTemp;
 
-        ImageSourceConverter conv = new ImageSourceConverter();
-        ImageSource SourceBlank;
-
-        Image ImageDragTemp;
-        ImageSource SourceDragTemp;
         //if mults are used for non-square images probably use an X and Y mult
 
         //mult * size = offset of drag-and-drop image - by default it may not be in the right place relative to cursor to look good
-        double DRAG_OFFSET_MULT = -0.053;
-        //mult * size = size change of drag-and-drop image
-        double DRAG_SIZE_MULT = -0.889;
+        private readonly double DRAG_OFFSET_MULT = -0.053;
 
-        double LowerWindowLength = 0;
+        //mult * size = size change of drag-and-drop image
+        private readonly double DRAG_SIZE_MULT = -0.889;
+        private double LowerWindowLength = 0;
         public MainWindow()
         {
-            SourceBlank = conv.ConvertFromString("data/NullBlack.png") as ImageSource;
+            SourceBlank = conv.ConvertFromString("data/NullNull.png") as ImageSource;
 
             InitializeComponent();
 
             DrawBoard();
-            LoadFen(BoardMain, "2rnrqk1/pppb1ppp/3p1b2/3BpNB1/3PP1n1/5N2/PPPQ1PPP/3RR1K1 w - - 54 30");
+            LoadFen(BoardMain, "2rnrqk1/pppb1ppp/3p1b2/3BpNB1/3PP1n1/5N2/PPPQ1PPP/3RR1K1 w - - 54 30"); //StringBoardStart when finished debugging
             LoadBoardState(BoardMain);
         }
 
@@ -105,7 +104,7 @@ namespace Chess
 
         private void DrawSquare(int[] pos, SolidColorBrush brush)
         {
-            Rectangle r = new Rectangle();
+            Rectangle r = new();
             GridBoard.Children.Add(r);
             Grid.SetRow(r, pos[0]);
             Grid.SetColumn(r, pos[1]);
@@ -117,32 +116,10 @@ namespace Chess
                 for (int j = 0; j < 8; j++)
                 {
                     int[] a = new int[] {i, j};
-                    SetPieceAt(a, board);
+                    Piece p = board.pieces[i, j];
+                    SetPieceImage(a, p.Colour.ToString(), p.Type.ToString());
                 }
             }
-        }
-
-        private void SetPieceAt(int[] a, Board board)
-        {
-            char c = board.pieces[a[0], a[1]];
-
-            ECOLOUR colour;
-            if (IsUpper(c))
-                colour = ECOLOUR.White;
-            else
-                colour = ECOLOUR.Black;
-            EPIECE piece = ToUpper(c) switch
-            {
-                'K' => EPIECE.King,
-                'Q' => EPIECE.Queen,
-                'R' => EPIECE.Rook,
-                'B' => EPIECE.Bishop,
-                'N' => EPIECE.Knight,
-                'P' => EPIECE.Pawn,
-                _ => EPIECE.Null
-            };
-
-            SetPieceImage(a, colour.ToString(), piece.ToString());
         }
 
         private void SetPieceImage(int[] pos, string colour, string piece)
@@ -161,7 +138,7 @@ namespace Chess
 
         private void DrawPieceImage(int[] pos)
         {
-            Image i = new Image();
+            Image i = new();
             GridBoard.Children.Add(i);
             Grid.SetRow(i, pos[0]);
             Grid.SetColumn(i, pos[1]);
@@ -223,7 +200,7 @@ namespace Chess
             if (SourceDragTemp.ToString() != SourceBlank.ToString()) //if square not empty
             { //start dragging
                 ImageDrag.Source = SourceDragTemp;
-                SetPieceImage(pos, "Black", "Null");
+                SetPieceImage(pos, "Null", "Null");
 
                 Cursor = Cursors.Hand;
                 ImageDrag.Visibility = Visibility.Visible;

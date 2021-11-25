@@ -8,13 +8,11 @@ using static Chess.CharFunc;
 
 namespace Chess
 {
-    enum EFENPOS { Pieces, Turn, Castle, Passant, HalfM, FullM }
-    enum ECOLOUR { Null, Black, White }
-    enum EPIECE { Null, King, Queen, Rook, Bishop, Knight, Pawn }
+    internal enum EFENPOS { Pieces, Turn, Castle, Passant, HalfM, FullM }
 
     internal class Board
     {
-        internal char[,] pieces = new char[8,8];
+        internal Piece[,] pieces = new Piece[8,8];
         internal ECOLOUR turn = ECOLOUR.Null;
         internal bool[] castle = new bool[4]; //0 = K, 1 = Q, 2 = k, 3 = q
         internal int[] passant = new int[2];
@@ -31,7 +29,7 @@ namespace Chess
             EFENPOS fenpos = EFENPOS.Pieces;
             int[] boardpos = new int[2]; //a8(0)->h8(7)->b7(8) etc.
 
-            char[,] pieces = new char[8,8];
+            Piece[,] pieces = new Piece[8,8];
             ECOLOUR turn = ECOLOUR.Null;
             bool[] castle = new bool[4];
             int[] passant = new int[2];
@@ -51,13 +49,15 @@ namespace Chess
                         case EFENPOS.Pieces:
                             if (IsPiece(c)) //piece
                             {
-                                pieces[boardpos[0], boardpos[1]] = c;
+                                Piece p = new(c);
+                                pieces[boardpos[0], boardpos[1]] = p;
                                 boardpos = Increment2D(boardpos, 7);
                             }
                             else if (IsNum(c)) //blank spaces
                             {
                                 for (int i = 0; i < GetNum(c); i++)
                                 {
+                                    pieces[boardpos[0], boardpos[1]] = Piece.Null;
                                     boardpos = Increment2D(boardpos, 7);
                                 }
                             }
@@ -165,7 +165,7 @@ namespace Chess
             }
         }
 
-        static int GetPosFromCoord(int a, int b) //must be "e5" etc.
+        private static int GetPosFromCoord(int a, int b) //must be "e5" etc.
         {
             int i = Positive(b - 8);
             i *= 8;
@@ -173,7 +173,7 @@ namespace Chess
             return i;
         }
 
-        static bool IsPiece(char c) //b k n p q r
+        private static bool IsPiece(char c) //b k n p q r
         {
             if (IsAlpha(c))
             {
@@ -201,20 +201,20 @@ namespace Chess
 
         internal bool Move(int[] pos1, int[] pos2)
         {
-            if (LegalMoves(pos1).moves.Any(p => p.SequenceEqual(pos2)) /*check if piece can move to destination*/)
+            if (LegalMoves(pos1).Any(p => p.SequenceEqual(pos2)) /*check if piece can move to destination*/)
             {
-                char piece1 = pieces[pos1[0], pos1[1]];
-                char piece2 = pieces[pos2[0], pos2[1]];
+                Piece piece1 = pieces[pos1[0], pos1[1]];
+                Piece piece2 = pieces[pos2[0], pos2[1]];
 
                 pieces[pos2[0], pos2[1]] = piece1;
-                pieces[pos1[0], pos1[1]] = '\0';
+                pieces[pos1[0], pos1[1]] = Piece.Null;
                 turn = turn switch
                 {
                     ECOLOUR.Black => ECOLOUR.White,
                     ECOLOUR.White => ECOLOUR.Black,
                 };
                 // if piece moved was pawn or square moved to had piece (piece was captured)
-                if (ToUpper(piece1) == 'P' || ToUpper(piece2) != '\0')
+                if (piece1.Type == EPIECE.Pawn || piece2.Type != EPIECE.Null)
                     halfm = 0;
                 //else reset
                 else
@@ -225,27 +225,129 @@ namespace Chess
             return false;
         }
 
-        internal PieceMoves LegalMoves(int[] pos)
+        internal List<int[]> LegalMoves(int[] pos)
         {
-            return new PieceMoves(pos, this);
-        }
+            List<int[]> l = new();
 
-        internal List<PieceMoves> AllLegalMoves()
-        {
-            List<PieceMoves> moves = new();
+            Piece p = pieces[pos[0],pos[1]];
 
-            List<int[]> StList = GetPieceSquares();
-            foreach (int[] s in StList)
+            switch (p.Type)
             {
-                moves.Add(new PieceMoves(s, this));
+                case EPIECE.King:
+                    l.AddRange(GetStraightMoves(1, pos));
+                    l.AddRange(GetDiagMoves(1, pos));
+                    break;
+                case EPIECE.Queen:
+                    l.AddRange(GetStraightMoves(7, pos));
+                    l.AddRange(GetDiagMoves(7, pos));
+                    break;
+                case EPIECE.Rook:
+                    l.AddRange(GetStraightMoves(7, pos));
+                    break;
+                case EPIECE.Bishop:
+                    l.AddRange(GetDiagMoves(7, pos));
+                    break;
+                case EPIECE.Knight:
+                    l.AddRange(GetLShapeMoves(3, pos));
+                    break;
+                case EPIECE.Pawn:
+                    l.AddRange(GetPawnMoves(1, pos));
+                    break;
             }
 
-            return moves;
+            return l;
+        }
+
+        private Piece PieceAt(int[] coord)
+        {
+            return pieces[coord[0],coord[1]];
+        }
+
+        private List<int[]> GetStraightMoves(int mS, int[] start)
+        {
+            List<int[]> l = new();
+            Piece pieceStart = PieceAt(start);
+
+            int[] coord = new int[2];
+            coord[1] = start[1];
+            //forward
+            for (int i = start[0] - 1; i >= 0; i--)
+            {
+                coord[0] = i;
+                Piece p = PieceAt(coord);
+
+                if (pieceStart.Colour != p.Colour)
+                    l.Add((int[])coord.Clone());
+                if (p.Colour != ECOLOUR.Null)
+                    break;
+            }
+            //back
+            for (int i = start[0] + 1; i <= mS; i++)
+            {
+                coord[0] = i;
+                Piece p = PieceAt(coord);
+
+                if (pieceStart.Colour != p.Colour)
+                    l.Add((int[])coord.Clone());
+                if (p.Colour != ECOLOUR.Null)
+                    break;
+            }
+            coord[0] = start[0];
+            //left
+            for (int i = start[1] - 1; i >= 0; i--)
+            {
+                coord[1] = i;
+                Piece p = PieceAt(coord);
+
+                if (pieceStart.Colour != p.Colour)
+                    l.Add((int[])coord.Clone());
+                if (p.Colour != ECOLOUR.Null)
+                    break;
+            }
+            //right
+            for (int i = start[1] + 1; i <= mS; i++)
+            {
+                coord[1] = i;
+                Piece p = PieceAt(coord);
+
+                if (pieceStart.Colour != p.Colour)
+                    l.Add((int[])coord.Clone());
+                if (p.Colour != ECOLOUR.Null)
+                    break;
+            }
+            return l;
+        }
+        private List<int[]> GetDiagMoves(int mS, int[] start)
+        {
+            //for (int i = 1; i<p.MoveSize; i++)
+            //{
+            //    coord[0] = i;
+            //    if (PieceAt())
+            //}
+            return new List<int[]>();
+        }
+        private List<int[]> GetLShapeMoves(int mS, int[] start)
+        {
+            //for (int i = 1; i<p.MoveSize; i++)
+            //{
+            //    coord[0] = i;
+            //    if (PieceAt())
+            //}
+            return new List<int[]>();
+        }
+        private List<int[]> GetPawnMoves(int mS, int[] start)
+        {
+            //for (int i = 1; i<p.MoveSize; i++)
+            //{
+            //    coord[0] = i;
+            //    if (PieceAt())
+            //}
+            return new List<int[]>();
         }
 
         internal List<int[]> GetPieceSquares()
         {
-            List<int[]> PieceSquares = new List<int[]>();
+            List<int[]> PieceSquares = new();
 
             for (int i = 0; i < 8; i++)
             {
@@ -255,7 +357,7 @@ namespace Chess
                     a[0] = i;
                     a[1] = j;
 
-                    if (pieces[i, j] != '\0')
+                    if (pieces[i, j].Colour != ECOLOUR.Null)
                     {
                         PieceSquares.Add(a);
                     }
