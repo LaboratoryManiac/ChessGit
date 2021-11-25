@@ -81,9 +81,9 @@ namespace Chess
                 {
                     int[] pos = new int[] { i, j };
 
-                    if (pos[1] == 0) //switch on start of each row (i % 8 == 0) otherwise you have columns of the same colour
+                    if (pos[1] == 0) //switch on start of each row otherwise you have columns of the same colour
                         even = !even;
-                    if (IsEven(i) == even)
+                    if (IsEven(j) == even)
                         PaintSquare(pos, brushBlack);
                     else
                         PaintSquare(pos, brushWhite);

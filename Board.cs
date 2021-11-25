@@ -178,26 +178,29 @@ namespace Chess
 
         internal bool Move(int[] pos1, int[] pos2)
         {
-            if (LegalMoves(pos1).Any(p => p.SequenceEqual(pos2)) /*check if piece can move to destination*/)
-            {
-                Piece piece1 = pieces[pos1[0], pos1[1]];
-                Piece piece2 = pieces[pos2[0], pos2[1]];
+            Piece piece1 = pieces[pos1[0], pos1[1]];
+            Piece piece2 = pieces[pos2[0], pos2[1]];
 
-                pieces[pos2[0], pos2[1]] = piece1;
-                pieces[pos1[0], pos1[1]] = Piece.Null;
-                turn = turn switch
+            if (piece1.Colour == turn)
+            {
+                if (LegalMoves(pos1).Any(p => p.SequenceEqual(pos2)) /*check if piece can move to destination*/)
                 {
-                    ECOLOUR.Black => ECOLOUR.White,
-                    ECOLOUR.White => ECOLOUR.Black,
-                };
-                // if piece moved was pawn or square moved to had piece (piece was captured)
-                if (piece1.Type == EPIECE.Pawn || piece2.Type != EPIECE.Null)
-                    halfm = 0;
-                //else reset
-                else
-                    halfm += 1;
-                fullm += 1;
-                return true;
+                    pieces[pos2[0], pos2[1]] = piece1;
+                    pieces[pos1[0], pos1[1]] = Piece.Null;
+                    turn = turn switch
+                    {
+                        ECOLOUR.Black => ECOLOUR.White,
+                        ECOLOUR.White => ECOLOUR.Black,
+                    };
+                    // if piece moved was pawn or square moved to had piece (piece was captured)
+                    if (piece1.Type == EPIECE.Pawn || piece2.Type != EPIECE.Null)
+                        halfm = 0;
+                    //else reset
+                    else
+                        halfm += 1;
+                    fullm += 1;
+                    return true;
+                }
             }
             return false;
         }
@@ -248,9 +251,12 @@ namespace Chess
             int[] coord = new int[2];
             coord[1] = start[1];
             //forward
-            for (int i = start[0] - 1; i >= 0; i--)
+            for (int i = start[0] - 1; i >= 0; i--) //cant move to own square or off board
             {
                 coord[0] = i;
+
+                if (start[0] - coord[0] > mS)
+                    break;
                 Piece p = PieceAt(coord);
 
                 if (pieceStart.Colour != p.Colour)
@@ -259,9 +265,12 @@ namespace Chess
                     break;
             }
             //back
-            for (int i = start[0] + 1; i <= mS; i++)
+            for (int i = start[0] + 1; i <= 7; i++)
             {
                 coord[0] = i;
+
+                if (coord[0] - start[0] > mS)
+                    break;
                 Piece p = PieceAt(coord);
 
                 if (pieceStart.Colour != p.Colour)
@@ -274,6 +283,9 @@ namespace Chess
             for (int i = start[1] - 1; i >= 0; i--)
             {
                 coord[1] = i;
+
+                if (start[1] - coord[1] > mS)
+                    break;
                 Piece p = PieceAt(coord);
 
                 if (pieceStart.Colour != p.Colour)
@@ -282,9 +294,12 @@ namespace Chess
                     break;
             }
             //right
-            for (int i = start[1] + 1; i <= mS; i++)
+            for (int i = start[1] + 1; i <= 7; i++)
             {
                 coord[1] = i;
+
+                if (coord[1] - start[1] > mS)
+                    break;
                 Piece p = PieceAt(coord);
 
                 if (pieceStart.Colour != p.Colour)

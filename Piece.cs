@@ -49,7 +49,7 @@ namespace Chess
                     EPIECE.Bishop => 3,
                     EPIECE.Knight => 3,
                     EPIECE.Pawn => 1,
-                    _ => -100,//error if used
+                    _ => -100,//should error if used in evaluation
                 };
             }
         }
