@@ -165,14 +165,6 @@ namespace Chess
             }
         }
 
-        private static int GetPosFromCoord(int a, int b) //must be "e5" etc.
-        {
-            int i = Positive(b - 8);
-            i *= 8;
-            i += a - 1; //takes a = 1, b = 2 so must subtract 1
-            return i;
-        }
-
         private static bool IsPiece(char c) //b k n p q r
         {
             if (IsAlpha(c))
@@ -182,21 +174,6 @@ namespace Chess
             }
             else
                 return false;
-        }
-
-        internal static int[] IntToCoord(int i) //7 = 0,7  42 = 5,2
-        {
-            int[] a = new int[2];
-            a[0] = i / 8; //IntPos[0] = row
-            a[1] = i % 8; //IntPos[1] = column
-            return a;
-        }
-        internal static int CoordToInt(int[] a)
-        {
-            int i = 0;
-            i += a[0] * 8;
-            i += a[1];
-            return i;
         }
 
         internal bool Move(int[] pos1, int[] pos2)
@@ -343,28 +320,6 @@ namespace Chess
             //    if (PieceAt())
             //}
             return new List<int[]>();
-        }
-
-        internal List<int[]> GetPieceSquares()
-        {
-            List<int[]> PieceSquares = new();
-
-            for (int i = 0; i < 8; i++)
-            {
-                for (int j = 0; j < 8; j++)
-                {
-                    int[] a = new int[2];
-                    a[0] = i;
-                    a[1] = j;
-
-                    if (pieces[i, j].Colour != ECOLOUR.Null)
-                    {
-                        PieceSquares.Add(a);
-                    }
-                }
-            }
-
-            return PieceSquares;
         }
     }
 }

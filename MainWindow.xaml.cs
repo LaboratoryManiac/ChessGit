@@ -75,16 +75,19 @@ namespace Chess
         private void PaintSquares()
         {
             bool even = true;
-            for (int i = 0; i < 64; i++)
+            for (int i = 0; i < 8; i++)
             {
-                int[] pos = IntToCoord(i);
+                for (int j = 0; j < 8; j++)
+                {
+                    int[] pos = new int[] { i, j };
 
-                if (pos[1] == 0) //switch on start of each row (i % 8 == 0) otherwise you have columns of the same colour
-                    even = !even;
-                if (IsEven(i) == even)
-                    PaintSquare(pos, brushBlack);
-                else
-                    PaintSquare(pos, brushWhite);
+                    if (pos[1] == 0) //switch on start of each row (i % 8 == 0) otherwise you have columns of the same colour
+                        even = !even;
+                    if (IsEven(i) == even)
+                        PaintSquare(pos, brushBlack);
+                    else
+                        PaintSquare(pos, brushWhite);
+                }
             }
         }
 
