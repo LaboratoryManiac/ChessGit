@@ -476,7 +476,8 @@ namespace Chess
         {
             List<Pos> l = new();
             Piece pieceStart = PieceAt(pos);
-            Dictionary<Pos, List<Pos>> enemyMoves = ColourMoves(pieceStart.ColourOpposite);
+            Dictionary<Pos, List<Pos>> enemyMoves = ColourMoves(pieceStart.ColourOpposite); //STACK OVERFLOW: ColourMoves calls GetKingMoves, however
+            //kings can't move in range of each other so I do have to check that in some way
 
             for (int i = 0; i < 4; i++)//check castling
             {
