@@ -55,21 +55,12 @@ namespace Chess
             InitializeComponent();
 
             DrawBoard();
-            LoadFen(BoardMain, "2rnrqk1/pppb1ppp/3p1b2/3BpNB1/3PP1n1/5N2/PPPQ1PPP/3RR1K1 w - - 54 30"); //StringBoardStart when finished debugging
-            LoadBoardState(BoardMain);
+            LoadFen(BoardMain, StringBoardStart); //StringBoardStart when finished debugging
         }
 
         private void DrawBoard()
         {
             PaintSquares();
-        }
-
-        private void LoadBoardState(Board board)
-        {
-            SetPieces(board);
-            SetTurn(board.turn);
-            SetHalfM(board.halfm);
-            SetFullM(board.fullm);
         }
 
         private void PaintSquares()
@@ -112,24 +103,24 @@ namespace Chess
             Grid.SetRow(r, pos[0]);
             Grid.SetColumn(r, pos[1]);
         }
-        private void SetPieces(Board board)
+        private void SetPieces(Piece[,] pieces)
         {
             for (int i = 0; i < 8; i++)
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    int[] a = new int[] {i, j};
-                    Piece p = board.pieces[i, j];
-                    SetPieceImage(a, p.Colour.ToString(), p.Type.ToString());
+                    Pos pos = new(i, j);
+                    Piece p = pieces[i, j];
+                    SetPieceImage(pos, p.Colour.ToString(), p.Type.ToString());
                 }
             }
         }
 
-        private void SetPieceImage(int[] pos, string colour, string piece)
+        private void SetPieceImage(Pos pos, string colour, string piece)
         {
             try
             {
-                Image i = ImageAtCell(pos[0], pos[1], GridBoard);
+                Image i = ImageAtCell(pos.Row, pos.Column, GridBoard);
                 i.Source = conv.ConvertFromString("data/" + piece + colour + ".png") as ImageSource;
             }
             catch
@@ -139,12 +130,12 @@ namespace Chess
             }
         }
 
-        private void DrawPieceImage(int[] pos)
+        private void DrawPieceImage(Pos pos)
         {
             Image i = new();
             GridBoard.Children.Add(i);
-            Grid.SetRow(i, pos[0]);
-            Grid.SetColumn(i, pos[1]);
+            Grid.SetRow(i, pos.Row);
+            Grid.SetColumn(i, pos.Column);
         }
 
         private void SetTurn(ECOLOUR colour)
@@ -160,6 +151,16 @@ namespace Chess
         private void SetFullM(int fullm)
         {
             LabelFullM.Content = "Moves: " + fullm.ToString();
+        }
+        private void SetWinner(EWINNER winner)
+        {
+            LabelWinner.Content = winner switch
+            {
+                EWINNER.Null => "Ongoing",
+                EWINNER.Black => "Black wins",
+                EWINNER.White => "White wins",
+                EWINNER.Draw => "Draw",
+            };
         }
 
         private static Rectangle RectangleAtCell(int row, int column, Grid grid)
@@ -191,13 +192,13 @@ namespace Chess
         private void LoadFen(Board board, string fen)
         {
             BoardMain = new Board(fen);
-            LoadBoardState(BoardMain);
+            BoardVisualUpdate(BoardMain);
         }
 
         private void GridBoard_MouseDown(object sender, MouseButtonEventArgs e)
         {
             ImageDragTemp = (Image)e.MouseDevice.DirectlyOver;
-            int[] pos = MouseGridPos(ImageDragTemp);
+            Pos pos = MouseGridPos(ImageDragTemp);
             SourceDragTemp = ImageDragTemp.Source;
 
             if (SourceDragTemp.ToString() != SourceBlank.ToString()) //if square not empty
@@ -234,16 +235,18 @@ namespace Chess
                 {
                     UIElement parent = VisualTreeHelper.GetParent((UIElement)e.MouseDevice.DirectlyOver) as UIElement;
 
-                    if (parent == GridBoard)
+                    if (parent == GridBoard && BoardMain.winner == EWINNER.Null) //if dropped on board and game is ongoing
                     {
                         Image newImage = (Image)e.MouseDevice.DirectlyOver;
 
-                        int[] pos1 = MouseGridPos(ImageDragTemp);
-                        int[] pos2 = MouseGridPos(newImage);
+                        Pos start = MouseGridPos(ImageDragTemp);
+                        Pos end = MouseGridPos(newImage);
 
-                        if (MovePiece(pos1, pos2, BoardMain))//TODO move is in legalmove list
+                        if (BoardMain.PlayerMove(start, end))//TODO move is in legalmove list
                         {
                             newImage.Source = SourceDragTemp;
+                            BoardMain.AIMove();
+                            BoardVisualUpdate(BoardMain);
                         }
                         else
                         {
@@ -262,19 +265,13 @@ namespace Chess
             }
         }
 
-        private bool MovePiece(int[] pos1, int[] pos2, Board board)
+        private void BoardVisualUpdate(Board board)
         {
-            if (board.Move(pos1, pos2))
-            {
-                SetTurn(board.turn);
-                SetHalfM(board.halfm);
-                SetFullM(board.fullm);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            SetPieces(board.pieces);
+            SetTurn(board.turn);
+            SetHalfM(board.halfm);
+            SetFullM(board.fullm);
+            SetWinner(board.winner);
         }
 
         private void ResetDragged(Image im, ImageSource so)
@@ -282,12 +279,13 @@ namespace Chess
             im.Source = so;
         }
 
-        private int[] MouseGridPos(Image element)
+        private Pos MouseGridPos(Image element)
         {
-            int[] pos = new int[2];
-
-            pos[0] = Grid.GetRow(element);
-            pos[1] = Grid.GetColumn(element);
+            Pos pos = new()
+            {
+                Row = Grid.GetRow(element),
+                Column = Grid.GetColumn(element),
+            };
 
             return pos;
         }

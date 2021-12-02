@@ -81,5 +81,13 @@ namespace Chess
             else
                 return false;
         }
+
+        internal static ECOLOUR ColourFromChar(char c)
+        {
+            if (IsUpper(c))
+                return ECOLOUR.White;
+            else
+                return ECOLOUR.Black;
+        }
     }
 }

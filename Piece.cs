@@ -54,6 +54,18 @@ namespace Chess
             }
         }
 
+        internal ECOLOUR ColourOpposite
+        {
+            get
+            {
+                return Colour switch
+                {
+                    ECOLOUR.White => ECOLOUR.Black,
+                    ECOLOUR.Black => ECOLOUR.White,
+                };
+            }
+        }
+
         internal static Piece Null
         {
             get

@@ -53,23 +53,31 @@ namespace Chess
             return i;
         }
 
-        internal static int[] Increment2D(int[] a, int cap) //only for int[2]
+        internal static int GreaterOf(int i, int j)
         {
-            if (a[1] == cap)
+            if (i > j)
+                return i;
+            else
+                return j;
+        }
+
+        internal static Pos Increment2D(Pos pos, int cap)
+        {
+            if (pos.Column == cap)
             {
-                a[1] = 0;
-                a[0] += 1;
+                pos.Column = 0;
+                pos.Row += 1;
             }
             else
             {
-                a[1] += 1;
+                pos.Column += 1;
             }
-            return a;
+            return pos;
         }
 
-        internal static bool IsMax2D(int[] a, int cap)
+        internal static bool IsMax2D(Pos a, int cap)
         {
-            if (a[0] == cap + 1)
+            if (a.Row > cap)
                 return true;
             else
                 return false;
