@@ -32,6 +32,7 @@ namespace Chess
         }
 
         private readonly string StringBoardStart = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+        private bool OpponentAI = false;
         private Board BoardMain = new();
         private readonly SolidColorBrush brushBlack = new(Color.FromRgb(70, 0, 0));
         private readonly SolidColorBrush brushWhite = new(Color.FromRgb(214, 228, 223));
@@ -245,7 +246,8 @@ namespace Chess
                         if (BoardMain.PlayerMove(start, end))//TODO move is in legalmove list
                         {
                             newImage.Source = SourceDragTemp;
-                            BoardMain.AIMove();
+                            if (OpponentAI)
+                                BoardMain.AIMove();
                             BoardVisualUpdate(BoardMain);
                         }
                         else
@@ -295,6 +297,15 @@ namespace Chess
             LowerWindowLength = GetLower(this.ActualHeight, this.ActualWidth);
             ImageDrag.MaxHeight = LowerWindowLength + DRAG_SIZE_MULT * LowerWindowLength;
             ImageDrag.MaxWidth = LowerWindowLength + DRAG_SIZE_MULT * LowerWindowLength;
+        }
+
+        private void ButtonOpponentAI_Click(object sender, RoutedEventArgs e)
+        {
+            OpponentAI = !OpponentAI;
+            if (OpponentAI)
+                ButtonOpponentAI.Content = "AI: Off";
+            else
+                ButtonOpponentAI.Content = "AI: On";
         }
     }
 }

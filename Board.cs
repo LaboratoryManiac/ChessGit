@@ -20,6 +20,7 @@ namespace Chess
         internal int halfm = 0;
         internal int fullm = 0;
         internal EWINNER winner = EWINNER.Null;
+        private bool KingCheckTest = false;
 
         internal Board()
         {
@@ -476,55 +477,73 @@ namespace Chess
         {
             List<Pos> l = new();
             Piece pieceStart = PieceAt(pos);
-            Dictionary<Pos, List<Pos>> enemyMoves = ColourMoves(pieceStart.ColourOpposite); //STACK OVERFLOW: ColourMoves calls GetKingMoves, however
-            //kings can't move in range of each other so I do have to check that in some way
-
-            for (int i = 0; i < 4; i++)//check castling
+            if (!KingCheckTest) //avoids recursion
             {
-                if (ColourFromChar(castle[i]) == pieceStart.Colour)//if can castle own colour king/queenside
+                KingCheckTest = true;
+                Dictionary<Pos, List<Pos>> enemyMoves = ColourMoves(ColourOpposite(pieceStart.Colour));
+                for (int i = 0; i < 4; i++)//check castling
                 {
-                    if (ToUpper(castle[i]) == 'K')
-                    {//kingside
-                        Pos p = pos; //check squares in between for pieces
-                        p.Column += 1;
-                        if (PieceAt(p).Colour == ECOLOUR.Null)
+                    if (ColourFromChar(castle[i]) == pieceStart.Colour)//if can castle own colour king/queenside
+                    {
+                        if (ToUpper(castle[i]) == 'K')
+                        {//kingside
+                            Pos p = pos; //check squares in between for pieces
                             p.Column += 1;
-                        if (PieceAt(p).Colour == ECOLOUR.Null)
-                        {
-                            if (!enemyMoves.Any(x => x.Value.Contains(p))) //see if move would not put king in check
+                            if (PieceAt(p).Colour == ECOLOUR.Null && !enemyMoves.Any(x => x.Value.Contains(p)))
+                                p.Column += 1; //check each square is empty and not in check
+                            if (PieceAt(p).Colour == ECOLOUR.Null && !enemyMoves.Any(x => x.Value.Contains(p)))
                                 l.Add(p);
                         }
+                        else
+                        {//queenside
+                            Pos p = pos; //check squares in between for pieces
+                            p.Column -= 1;
+                            if (PieceAt(p).Colour == ECOLOUR.Null && !enemyMoves.Any(x => x.Value.Contains(p)))
+                                p.Column -= 1; //check each square is empty and not in check
+                            if (PieceAt(p).Colour == ECOLOUR.Null && !enemyMoves.Any(x => x.Value.Contains(p)))
+                                p.Column -= 1;
+                            if (PieceAt(p).Colour == ECOLOUR.Null) //b1/b8 can be attacked and still castle
+                            {
+                                p.Column += 1; //queenside checks 3 squares but king only moves 2
+                                    l.Add(p);
+                            }
+                        }
                     }
-                    else
-                    {//queenside
-                        Pos p = pos; //check squares in between for pieces
-                        p.Column -= 1;
-                        if (PieceAt(p).Colour == ECOLOUR.Null)
-                            p.Column -= 1;
-                        if (PieceAt(p).Colour == ECOLOUR.Null)
-                            p.Column -= 1;
-                        if (PieceAt(p).Colour == ECOLOUR.Null)
+                }
+                for (int i = -1; i < 2; i++) //get normal king moves
+                {
+                    pos.Row += i;
+                    for (int j = -1; j < 2; j++)
+                    {
+                        pos.Column += j;
+                        if (PosInBounds(pos) && !(i == 0 && j == 0)) //skip square king is on
                         {
-                            p.Column += 1;
-                            if (!enemyMoves.Any(x => x.Value.Contains(p))) //see if move would not put king in check
-                                l.Add(p);
+                            Piece pieceEnd = PieceAt(pos);
+                            if (pieceEnd.Colour != pieceStart.Colour)
+                            {
+                                if (!enemyMoves.Any(x => x.Value.Contains(pos))) //see if move would not put king in check
+                                    l.Add(pos);
+                            }
                         }
                     }
                 }
             }
-            for (int i = -1; i < 2; i++) //get normal king moves
+            else
             {
-                pos.Row += i;
-                for (int j = -1; j < 2; j++)
+                KingCheckTest = false;
+                for (int i = -1; i < 2; i++) //get normal king moves
                 {
-                    pos.Column += j;
-                    if (PosInBounds(pos) && !(i == 0 && j == 0)) //skip square king is on
+                    pos.Row += i;
+                    for (int j = -1; j < 2; j++)
                     {
-                        Piece pieceEnd = PieceAt(pos);
-                        if (pieceEnd.Colour != pieceStart.Colour) //todo also see whether move is in check
+                        pos.Column += j;
+                        if (PosInBounds(pos) && !(i == 0 && j == 0)) //skip square king is on
                         {
-                            if (!enemyMoves.Any(x => x.Value.Contains(pos))) //see if move would not put king in check
+                            Piece pieceEnd = PieceAt(pos);
+                            if (pieceEnd.Colour != pieceStart.Colour)
+                            {
                                 l.Add(pos);
+                            }
                         }
                     }
                 }
@@ -562,6 +581,42 @@ namespace Chess
                 return 1;//black
             else
                 return -1;//white
+        }
+
+        private bool IsKingChecked(Pos start, Pos end, ECOLOUR colour)
+        {
+            Piece[,] piecesOld = pieces;
+            Piece temp = pieces[start.Row, start.Column];
+            pieces[end.Row, end.Column] = temp;
+            temp = Piece.Null;
+
+            KingCheckTest = true;
+            Dictionary<Pos, List<Pos>> enemyMoves = ColourMoves(ColourOpposite(colour));
+            Pos kingPos = Pos.Null;
+            for (int i = 0; i < 8; i++) //find king
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    Piece p = pieces[i, j];
+                    if (p.Type == EPIECE.King && p.Colour == colour)
+                        kingPos = new Pos(i, j);
+                }
+            }
+            pieces = piecesOld;
+            if (enemyMoves.Any(x => x.Value.Contains(kingPos)))
+                return true;
+            else
+                return false;
+        }
+
+        internal static ECOLOUR ColourOpposite(ECOLOUR colour)
+        {
+            return colour switch
+            {
+                ECOLOUR.White => ECOLOUR.Black,
+                ECOLOUR.Black => ECOLOUR.White,
+                _ => throw null,
+            };
         }
     }
 }
