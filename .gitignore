@@ -1,5 +1,10 @@
 
 .vs/
-bin/
+bin/Debug/net6.0-windows/ref
+bin/Debug/net6.0-windows/Chess.deps.json
+bin/Debug/net6.0-windows/Chess.dll
+bin/Debug/net6.0-windows/Chess.exe
+bin/Debug/net6.0-windows/Chess.pdb
+bin/Debug/net6.0-windows/Chess.runtimeconfig.json
 obj/
 Chess.csproj.user
